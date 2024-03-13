@@ -27,12 +27,13 @@ export class DotnetTool implements IDotnetTool {
     }
 
     public disableTelemetry(): void {
+        this.buildAgent.info('Disable Telemetry')
         this.buildAgent.setVariable('DOTNET_CLI_TELEMETRY_OPTOUT', 'true')
         this.buildAgent.setVariable('DOTNET_NOLOGO', 'true')
     }
 
     public execute(cmd: string, args: string[]): Promise<IExecResult> {
-        console.log(`Command: ${cmd} ${args.join(' ')}`)
+        this.buildAgent.info(`Command: ${cmd} ${args.join(' ')}`)
         return this.buildAgent.exec(cmd, args)
     }
 
@@ -91,9 +92,9 @@ export class DotnetTool implements IDotnetTool {
         }
     }
 
-    private async queryLatestMatch(toolName: string, versionSpec: string, includePrerelease: boolean): Promise<string> {
-        this.buildAgent.debug(
-            `querying tool versions for ${toolName}${versionSpec ? `@${versionSpec}` : ''} ${includePrerelease ? 'including pre-releases' : ''}`
+    private async queryLatestMatch(toolName: string, versionSpec: string, includePrerelease: boolean): Promise<string | null> {
+        this.buildAgent.info(
+            `Querying tool versions for ${toolName}${versionSpec ? `@${versionSpec}` : ''} ${includePrerelease ? 'including pre-releases' : ''}`
         )
 
         const toolNameParam = encodeURIComponent(toolName.toLowerCase())
