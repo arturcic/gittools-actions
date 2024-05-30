@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify'
 import { GitVersionOutput, GitVersionSettings } from './models'
-import { ISetupSettings, TYPES } from '../common/models'
-import { IExecResult } from '../../agents/common/models'
+import { SetupSettings, TYPES } from '../common/models'
+import { ExecResult } from '../../agents/common/models'
 import { DotnetTool, IDotnetTool } from '../common/dotnet-tool'
 import { IBuildAgent } from '../../agents/common/build-agent'
 
 export interface IGitVersionTool extends IDotnetTool {
-    install(setupSettings: ISetupSettings): Promise<void>
+    install(setupSettings: SetupSettings): Promise<void>
 
-    run(options: GitVersionSettings): Promise<IExecResult>
+    run(options: GitVersionSettings): Promise<ExecResult>
 
     writeGitVersionToAgent(gitversion: GitVersionOutput): void
 }
@@ -19,11 +19,11 @@ export class GitVersionTool extends DotnetTool implements IGitVersionTool {
         super(buildAgent)
     }
 
-    public async install(setupSettings: ISetupSettings): Promise<void> {
+    public async install(setupSettings: SetupSettings): Promise<void> {
         await this.toolInstall('GitVersion.Tool', '>=5.2.0 <6.1.0', setupSettings)
     }
 
-    public async run(options: GitVersionSettings): Promise<IExecResult> {
+    public async run(options: GitVersionSettings): Promise<ExecResult> {
         const workDir = this.getRepoDir(options)
 
         if (!options.disableShallowCloneCheck) {

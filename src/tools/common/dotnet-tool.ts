@@ -1,8 +1,8 @@
-import { ISetupSettings, TYPES } from './models'
+import { SetupSettings, TYPES } from './models'
 import { inject, injectable } from 'inversify'
 import { IBuildAgent } from '../../agents/common/build-agent'
 import * as http from 'typed-rest-client/HttpClient'
-import { IExecResult } from '../../agents/common/models'
+import { ExecResult } from '../../agents/common/models'
 import * as semver from 'semver'
 import os from 'os'
 import fs from 'fs'
@@ -11,7 +11,7 @@ import path from 'path'
 export interface IDotnetTool {
     disableTelemetry(): void
 
-    toolInstall(toolName: string, versionRange: string, setupSettings: ISetupSettings): Promise<string>
+    toolInstall(toolName: string, versionRange: string, setupSettings: SetupSettings): Promise<string>
 }
 
 @injectable()
@@ -32,12 +32,12 @@ export class DotnetTool implements IDotnetTool {
         this.buildAgent.setVariable('DOTNET_NOLOGO', 'true')
     }
 
-    public execute(cmd: string, args: string[]): Promise<IExecResult> {
+    public execute(cmd: string, args: string[]): Promise<ExecResult> {
         this.buildAgent.info(`Command: ${cmd} ${args.join(' ')}`)
         return this.buildAgent.exec(cmd, args)
     }
 
-    public async toolInstall(toolName: string, versionRange: string, setupSettings: ISetupSettings): Promise<string> {
+    public async toolInstall(toolName: string, versionRange: string, setupSettings: SetupSettings): Promise<string> {
         let version: string | null = semver.clean(setupSettings.versionSpec) || setupSettings.versionSpec
         console.log('')
         console.log('--------------------------')
