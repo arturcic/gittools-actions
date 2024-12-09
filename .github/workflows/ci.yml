@@ -34,6 +34,13 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         fetch-depth: 0
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        fingerprint: ${{ secrets.GPG_FINGERPRINT }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
     - run: |
         npm install
       name: Install dependencies
@@ -104,6 +111,6 @@ jobs:
         git add --verbose .
         git config user.name 'Artur Stolear'
         git config user.email 'artur.stolear@gmail.com'
-        git commit -m 'dist update' --allow-empty
+        git commit -m -S 'dist update' --allow-empty
         git push --force
       if: steps.status.outputs.has_changes == '1'
