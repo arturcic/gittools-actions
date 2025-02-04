@@ -74,7 +74,7 @@
     "vitest": "^3.0.3"
   },
   "dependencies": {
-    "semver": "^7.6.3"
+    "semver": "^7.7.1"
   },
   "lint-staged": {
     "*.ts": ["eslint --fix", "prettier --write"],
